@@ -57,7 +57,7 @@ def convert_mth_strings ( mth_string ):
     return mth_string
 # pull down the content from the webpage
 html = urllib2.urlopen(url)
-soup = BeautifulSoup(html)
+soup = BeautifulSoup(html, 'html.parser')
 # find all entries with the required class
 block = soup.find('table', 'downloadTable')
 links = block.findAll('a', href=True)
