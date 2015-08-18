@@ -29,12 +29,12 @@ def validateFilename(filename):
         return True
 def validateURL(url):
     try:
-        r = requests.get(url, allow_redirects=True, timeout=20)
+        r = requests.get(url, allow_redirects=True, timeout=90)
         count = 1
         while r.status_code == 500 and count < 4:
             print ("Attempt {0} - Status code: {1}. Retrying.".format(count, r.status_code))
             count += 1
-            r = requests.get(url, allow_redirects=True, timeout=20)
+            r = requests.get(url, allow_redirects=True, timeout=90)
         sourceFilename = r.headers.get('Content-Disposition')
 
         if sourceFilename:
