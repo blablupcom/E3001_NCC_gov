@@ -8,7 +8,8 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
 import urllib
-import time
+from time import sleep
+from random import randint
 
 
 # Set up variables
@@ -34,7 +35,7 @@ def validateURL(url):
     try:
         #r = requests.get(url, allow_redirects=True, timeout=20)
         #r = urllib2.urlopen(url)
-        time.sleep(2)
+        sleep(randint(1,6))
         r = urllib.urlopen(url)
         count = 1
         while r.getcode() == 500 and count < 4:
