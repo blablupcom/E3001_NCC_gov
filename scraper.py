@@ -7,6 +7,9 @@ import urllib2
 from datetime import datetime
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
+import urllib
+import time
+
 
 # Set up variables
 entity_id = "E3001_NCC_gov"
@@ -29,19 +32,24 @@ def validateFilename(filename):
         return True
 def validateURL(url):
     try:
-        r = requests.get(url, allow_redirects=True, timeout=90)
+        #r = requests.get(url, allow_redirects=True, timeout=20)
+        #r = urllib2.urlopen(url)
+        time.sleep(2)
+        r = urllib.urlopen(url)
         count = 1
-        while r.status_code == 500 and count < 4:
-            print ("Attempt {0} - Status code: {1}. Retrying.".format(count, r.status_code))
+        while r.getcode() == 500 and count < 4:
+            print ("Attempt {0} - Status code: {1}. Retrying.".format(count, r.getcode()))
             count += 1
-            r = requests.get(url, allow_redirects=True, timeout=90)
+            r = urllib.urlopen(url)
+            #r = requests.get(url, allow_redirects=True, timeout=20)
+            # r = urllib2.urlopen(url )
         sourceFilename = r.headers.get('Content-Disposition')
 
         if sourceFilename:
             ext = os.path.splitext(sourceFilename)[1].replace('"', '').replace(';', '').replace(' ', '')
         else:
             ext = os.path.splitext(url)[1]
-        validURL = r.status_code == 200
+        validURL = r.getcode() == 200
         validFiletype = ext in ['.csv', '.xls', '.xlsx']
         return validURL, validFiletype
     except:
@@ -58,6 +66,7 @@ def convert_mth_strings ( mth_string ):
 # pull down the content from the webpage
 html = urllib2.urlopen(url)
 soup = BeautifulSoup(html, 'html.parser')
+
 # find all entries with the required class
 block = soup.find('table', 'downloadTable')
 links = block.findAll('a', href=True)
